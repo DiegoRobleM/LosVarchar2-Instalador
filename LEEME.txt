@@ -3,6 +3,12 @@ INSTALAR EL CLIENTE - SERVIDOR "LOS VARCHAR2"
 
 Version: Minecraft Java 1.21.1 con NeoForge
 
+DESCARGAR LA ULTIMA VERSION DEL INSTALADOR
+Este enlace siempre baja la version mas nueva (guardalo):
+https://github.com/DiegoRobleM/LosVarchar2-Instalador/releases/latest/download/Cliente-Amigos-SinExe.zip
+Pagina del instalador (codigo y versiones anteriores):
+https://github.com/DiegoRobleM/LosVarchar2-Instalador
+
 ANTES DE EMPEZAR
 1. Tener Minecraft Java Edition instalado.
 2. Abrir el launcher de Minecraft al menos una vez, iniciar sesion y cerrarlo.
