@@ -1,0 +1,56 @@
+INSTALAR EL CLIENTE - SERVIDOR "LOS VARCHAR2"
+=====================================================
+
+Version: Minecraft Java 1.21.1 con NeoForge
+
+ANTES DE EMPEZAR
+1. Tener Minecraft Java Edition instalado.
+2. Abrir el launcher de Minecraft al menos una vez, iniciar sesion y cerrarlo.
+3. Tener Java 21 o superior. Si no lo tienes: https://adoptium.net
+   (descarga Temurin 21, instalalo y reinicia el PC).
+
+INSTALACION
+1. ANTES de extraer: clic derecho en el .zip > Propiedades > marca
+   "Desbloquear" (abajo) > Aceptar. Asi Windows no muestra la alerta de
+   "editor desconocido". (Si no aparece la casilla, sigue igual.)
+2. Extrae el .zip completo (no ejecutes nada desde dentro del .zip).
+3. Haz doble clic en "Instalar.bat" y presiona "Instalar".
+   - Se abre una ventana negra y luego el instalador. No cierres la
+     ventana negra mientras instala.
+   - La ventana muestra el progreso, la velocidad de descarga, el mod
+     que se esta descargando y el tiempo restante.
+   - Instala NeoForge (si falta) y descarga solo los mods que te faltan.
+   - Si tienes mods que no son del servidor, se mueven a una carpeta de
+     respaldo (.minecraft\mods-respaldo-fecha). No se pierden.
+   - Antes de instalar te pregunta dos cosas (solo si aplica):
+       * Si quieres borrar los datos del minimapa (mapa explorado y
+         waypoints). Dile que SI si Diego reinicio el mundo. Cierra
+         Minecraft antes, o no se borrara.
+       * Si quieres borrar las carpetas de respaldo de mods.
+4. Abre el launcher de Minecraft, elige el perfil "NeoForge" y dale a Jugar.
+   La primera vez tarda varios minutos en cargar.
+
+NO BORRES NI MUEVAS LA CARPETA "archivos": Instalar.bat la necesita.
+
+SI LA VENTANA NO ABRE O FALLA
+- Usa "archivos\instalar-modo-texto.bat": hace lo mismo en una consola.
+
+CONECTARSE
+1. Multijugador > Agregar servidor.
+2. Pega la direccion que te pase Diego.
+
+SHADERS
+- Se instalan Iris y un shader pack. Para usarlo: en el juego ve a
+  Opciones > Video > Shaders y elige "ComplementaryReimagined".
+- Los shaders piden una tarjeta grafica decente. Si el juego va lento,
+  deja los shaders en "Desactivado".
+
+NOTAS
+- Algunos mods pueden salir como [omitido] si no existen para esta
+  version. Es normal.
+- Si igual sale "Windows protegio tu PC", elige "Mas informacion" >
+  "Ejecutar de todas formas". Sale porque el instalador es casero y no
+  esta firmado, no porque sea peligroso.
+- Si algo falla, mandale a Diego una captura de la ventana.
+- Cuando Diego actualice los mods, vuelve a abrir "Instalar.bat":
+  solo descarga lo nuevo y quita lo que ya no se usa.

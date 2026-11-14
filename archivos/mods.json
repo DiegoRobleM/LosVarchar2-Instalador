@@ -1,0 +1,134 @@
+{
+  "_notas": [
+    "Lista de mods del servidor (Modrinth, NeoForge). La usan el servidor y los instaladores de los amigos.",
+    "Los nombres son los 'slug' de Modrinth (lo que sale en la URL del mod).",
+    "irons-lib es obligatorio para Iron's Spells; Modrinth no lo marca como dependencia.",
+    "skinrestorer: devuelve las skins con online-mode=false.",
+    "tpatools: /tpa, /home, /back y mas para todos sin OP. Solo servidor, sin dependencias (FTB Essentials no esta en Modrinth).",
+    "Despues de cambiar este archivo: Herramientas/publicar-lista.bat para que les llegue a los amigos."
+  ],
+  "mc": "1.21.1",
+  "modsAmbos": {
+    "rendimiento": [
+      "modernfix",
+      "ferrite-core",
+      "lithium",
+      "clumps"
+    ],
+    "mejoras_vanilla": [
+      "jei",
+      "mezzconfig",
+      "jade",
+      "appleskin",
+      "simple-voice-chat",
+      "waystones",
+      "balm"
+    ],
+    "tecnologia": [
+      "create",
+      "mekanism",
+      "ae2",
+      "mekanism-generators",
+      "applied-energistics-2-wireless-terminals",
+      "slice-and-dice",
+      "iron-furnaces"
+    ],
+    "magia": [
+      "ars-nouveau",
+      "geckolib",
+      "wizards",
+      "irons-spells-n-spellbooks",
+      "irons-lib"
+    ],
+    "biomas": [
+      "terralith",
+      "regions-unexplored",
+      "ecologics"
+    ],
+    "exploracion": [
+      "yungs-better-dungeons",
+      "explorify",
+      "explorations",
+      "explorers-compass",
+      "dungeons-and-taverns",
+      "yungs-better-strongholds",
+      "yungs-better-nether-fortresses",
+      "yungs-better-end-island",
+      "yungs-better-mineshafts",
+      "towns-and-towers",
+      "lootr"
+    ],
+    "comida": [
+      "farmers-delight",
+      "miners-delight",
+      "ends-delight",
+      "lets-do-vinery"
+    ],
+    "almacenamiento": [
+      "sophisticated-backpacks",
+      "sophisticated-storage"
+    ],
+    "calidad_de_vida": [
+      "gravestone-mod",
+      "fallingtree",
+      "open-parties-and-claims",
+      "comforts"
+    ],
+    "jefes_y_criaturas": [
+      "mowzies-mobs",
+      "l_enders-cataclysm",
+      "iceandfire-ce",
+      "naturalist"
+    ],
+    "decoracion": [
+      "handcrafted",
+      "supplementaries",
+      "chipped",
+      "macaws-furniture",
+      "macaws-roofs",
+      "macaws-bridges",
+      "macaws-doors",
+      "macaws-windows"
+    ],
+    "dimensiones": [
+      "aether",
+      "deeperdarker"
+    ],
+    "combate": [
+      "simply-swords",
+      "better-combat",
+      "immersive-armors"
+    ],
+    "agricultura": [
+      "mystical-agriculture",
+      "serene-seasons",
+      "animal_feeding_trough"
+    ],
+    "misiones": [
+      "daily-quests",
+      "odyssey-quests"
+    ]
+  },
+  "modsSoloServidor": [
+    "chunky",
+    "spark",
+    "skinrestorer",
+    "tpatools",
+    "bluemap"
+  ],
+  "modsSoloCliente": [
+    "xaeros-minimap",
+    "xaeros-world-map",
+    "sodium",
+    "iris",
+    "entityculling",
+    "immediatelyfast",
+    "mouse-tweaks",
+    "inventory-profiles-next",
+    "mezzconfiggui",
+    "distanthorizons"
+  ],
+  "shaders": [
+    "complementary-reimagined"
+  ]
+}

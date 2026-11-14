@@ -1,0 +1,24 @@
+{
+    "Features": {
+        "enable_profiles": {
+            "value": false
+        }
+    },
+    "ModSettings": {
+        "first_run": false,
+        "enable_profiles": {
+            "value": false
+        }
+    },
+    "AutoRefillSettings": {
+        "ignore_locked_slots": false,
+        "auto_refill_enable_indicator_icons": {
+            "value": false
+        }
+    },
+    "EditProfiles": {
+        "enable_profiles": {
+            "value": false
+        }
+    }
+}
