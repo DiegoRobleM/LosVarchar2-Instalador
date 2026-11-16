@@ -94,7 +94,8 @@ foreach ($b in (Fijar-PerfilNeoForge $mcDir $nf)) { Write-Host "Version vieja bo
 #    versiones antiguas) se mueven a .minecraft\mods-respaldo-<fecha>, no se borran.
 Write-Host 'Sincronizando mods...'
 $resp = Join-Path $mcDir ('mods-respaldo-' + (Get-Date -Format 'yyyyMMdd-HHmmss'))
-Sync-Mods ($modsAmbos + $modsSoloCliente) $mods $resp
+$fijos = Leer-Fijos   # mismas versiones exactas que el servidor (mods-fijos.json)
+Sync-Fijos (Archivos-Fijos $fijos ($modsAmbos + $modsSoloCliente)) $mods $resp
 if ($borrarRespaldo) {
     Get-ChildItem -LiteralPath $mcDir -Directory -Filter 'mods-respaldo-*' | ForEach-Object {
         Remove-Item -LiteralPath $_.FullName -Recurse -Force
@@ -104,8 +105,8 @@ if ($borrarRespaldo) {
 
 # 3) Shader packs (se guardan en .minecraft\shaderpacks; activalos en Opciones > Shaders)
 $shadersDir = Join-Path $mcDir 'shaderpacks'
-New-Item -ItemType Directory -Force -Path $shadersDir | Out-Null
-foreach ($s in $shaders) { Install-Shader $s $shadersDir }
+$script:fallosFijos = 0
+Sync-Fijos (Archivos-Fijos $fijos $shaders 'shaders') $shadersDir $null -SinQuitar
 
 # 4) Configuraciones de Diego (archivos\configs -> .minecraft\config)
 #    Se copian solo la primera vez; despues se respetan los cambios del jugador.

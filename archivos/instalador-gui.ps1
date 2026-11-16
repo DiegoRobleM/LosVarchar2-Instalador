@@ -78,7 +78,8 @@ $trabajo = {
 
         # Descarga un archivo sumando los bytes a $sync.Hecho para la barra.
         # Escribe primero en ".part" y renombra al final: si se corta, no queda un .jar a medias.
-        function Descargar($url, $destino) {
+        # Si se da $sha1 (huella de Modrinth), se revisa antes de dejar el archivo.
+        function Descargar($url, $destino, $sha1 = '') {
             $parte = "$destino.part"
             try {
                 $req = [System.Net.HttpWebRequest]::Create($url)
@@ -95,6 +96,7 @@ $trabajo = {
                         $sync.ArchivoHecho += $n
                     }
                 } finally { $salida.Close(); $entrada.Close(); $resp.Close() }
+                if ($sha1 -and (Sha1-Archivo $parte) -ne $sha1) { throw "El archivo bajado no coincide con su huella: $(Split-Path $destino -Leaf)" }
                 if ([System.IO.File]::Exists($destino)) { [System.IO.File]::Delete($destino) }
                 [System.IO.File]::Move($parte, $destino)
             } catch {
@@ -143,57 +145,39 @@ $trabajo = {
         foreach ($b in (Fijar-PerfilNeoForge $mcDir $nf)) { Log "Versión vieja: $b" 'borrado' }
         $sync.NeoListo = $true
 
-        # --- PASO 2: armar el plan: que archivo corresponde a cada mod y sus dependencias ---
+        # --- PASO 2: armar el plan con las versiones fijas (mods-fijos.json) ---
+        # Son las mismas versiones exactas que tiene el servidor. Solo un mod que aun no
+        # este fijado (lista mas nueva que mods-fijos) se consulta en Modrinth.
         $sync.Paso = 2
-        $sync.Fase = 'Revisando la lista en Modrinth...'
+        $sync.Fase = 'Revisando la lista de mods...'
         $plan     = New-Object System.Collections.ArrayList
-        $vistos   = @{}
-        $archivos = @{}
         $estado   = @{ Fallos = 0 }
+        $script:fallosFijos = 0
+        $fijos = Leer-Fijos
+        $sync.Actual = if ($fijos.fecha) { "Versiones fijas del $($fijos.fecha)" } else { 'Consultando Modrinth' }
 
-        # $padre: si es una dependencia, el mod que la pidio (para mostrar un nombre legible)
-        function Resolver($slug, $loader, $destino, $padre = '') {
-            if ($vistos.ContainsKey($slug)) { return }
-            $vistos[$slug] = $true
-            if ($sync.Cancelar) { throw 'CANCELADO' }
-            # Las dependencias llegan como id de Modrinth (ej. "AANobbMI"), no como nombre legible
-            $nombre = if ($padre) { "dependencia de $padre" } else { $slug }
-            $sync.Actual = if ($padre) { "Consultando dependencias de $padre" } else { "Consultando: $slug" }
-            $base = "https://api.modrinth.com/v2/project/$slug/version?loaders=%5B%22$loader%22%5D"
-            try {
-                $vers = Get-Json "$base&game_versions=%5B%22$mc%22%5D"
-                if ($vers.Count -eq 0 -and $loader -eq 'iris') { $vers = Get-Json $base }
-            } catch {
-                $estado.Fallos++; $sync.Errores++
-                Log "$nombre (no se pudo consultar)" 'error'
-                return
-            }
-            if ($vers.Count -eq 0) {
-                $sync.Omitidos++
-                Log "$nombre (sin versión para $mc)" 'omitido'
-                return
-            }
-            $v = $vers[0]
-            foreach ($c in $vers) { if ($c.version_type -eq 'release') { $v = $c; break } }
-            $f = $v.files[0]
-            foreach ($c in $v.files) { if ($c.primary -eq $true) { $f = $c; break } }
-            $clave = "$destino|$($f.filename)"
-            if (-not $archivos.ContainsKey($clave)) {
-                $archivos[$clave] = $true
+        function Agregar-AlPlan($lista, $destino) {
+            foreach ($a in $lista) {
+                if ($sync.Cancelar) { throw 'CANCELADO' }
                 [void]$plan.Add([pscustomobject]@{
-                    Archivo = $f.filename; Url = $f.url; Tam = [long]$f.size; Destino = $destino
-                    Existe  = (Test-Path -LiteralPath (Join-Path $destino $f.filename))
+                    Archivo = $a.archivo; Url = $a.url; Tam = [long]$a.tam; Sha1 = $a.sha1; Destino = $destino
+                    Existe  = (Test-Path -LiteralPath (Join-Path $destino $a.archivo))
                 })
             }
-            if ($loader -eq 'neoforge') {
-                foreach ($d in $v.dependencies) {
-                    if ($d.dependency_type -eq 'required' -and $d.project_id) { Resolver $d.project_id $loader $destino $(if ($padre) { $padre } else { $slug }) }
-                }
+        }
+        # Mods de la lista sin version para Minecraft $mc (fijados como lista vacia)
+        foreach ($tipoO in 'mods', 'shaders') {
+            $slugsO = if ($tipoO -eq 'shaders') { $shaders } else { $modsAmbos + $modsSoloCliente }
+            foreach ($s in $slugsO) {
+                if ($fijos[$tipoO].Contains($s) -and @($fijos[$tipoO][$s]).Count -eq 0) { $sync.Omitidos++; Log "$s (sin versión para $mc)" 'omitido' }
             }
         }
-
-        foreach ($s in ($modsAmbos + $modsSoloCliente)) { Resolver $s 'neoforge' $mods }
-        foreach ($s in $shaders) { Resolver $s 'iris' $shadersDir }
+        Agregar-AlPlan @(Archivos-Fijos $fijos ($modsAmbos + $modsSoloCliente) 'mods') $mods
+        Agregar-AlPlan @(Archivos-Fijos $fijos $shaders 'shaders') $shadersDir
+        if ($script:fallosFijos -gt 0) {
+            $estado.Fallos += $script:fallosFijos; $sync.Errores += $script:fallosFijos
+            Log "$($script:fallosFijos) mod(s) no se pudieron consultar en Modrinth" 'error'
+        }
         $sync.Actual = ''
 
         $sync.ModsTotal     = @($plan | Where-Object { $_.Destino -eq $mods }).Count
@@ -217,7 +201,7 @@ $trabajo = {
             $sync.ArchivoTotal = [long]$p.Tam
             $sync.ArchivoHecho = [long]0
             try {
-                Descargar $p.Url (Join-Path $p.Destino $p.Archivo)
+                Descargar $p.Url (Join-Path $p.Destino $p.Archivo) $p.Sha1
                 $sync.Nuevos++
                 if ($esShader) { $sync.ShadersListos++ } else { $sync.ModsListos++ }
                 Log $p.Archivo 'nuevo' $p.Tam
