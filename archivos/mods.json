@@ -5,7 +5,7 @@
     "irons-lib es obligatorio para Iron's Spells; Modrinth no lo marca como dependencia.",
     "skinrestorer: devuelve las skins con online-mode=false.",
     "tpatools: /tpa, /home, /back y mas para todos sin OP. Solo servidor, sin dependencias (FTB Essentials no esta en Modrinth).",
-    "passwordgate: contrasena por jugador (online-mode=false deja usar cualquier nombre). Obligatorio en servidor Y cliente: sin el mod no se puede entrar.",
+    "server-password-without-login: contrasena por jugador (online-mode=false deja usar cualquier nombre). Obligatorio en servidor Y cliente: sin el mod no se puede entrar. Reemplazo a PasswordGate (su pantalla no mostraba los textos).",
     "Despues de cambiar este archivo: Herramientas/publicar-lista.bat para que les llegue a los amigos."
   ],
   "mc": "1.21.1",
@@ -113,7 +113,7 @@
       "lightmans-currency"
     ],
     "seguridad": [
-      "passwordgate"
+      "server-password-without-login"
     ]
   },
   "modsSoloServidor": [

@@ -1019,8 +1019,8 @@ $etiquetas = @{
     error    = @('Error', '#F87171', '#3A1C1C')
 }
 
-# Aviso que se muestra arriba de la lista al terminar bien (PasswordGate pide la clave al abrir Minecraft)
-$avisoClave = 'Al abrir Minecraft te pedirá una CONTRASEÑA para entrar a Los Varchar2. Elige una (mínimo 12 caracteres) y guárdala bien: si juegas desde otro PC, escribe la misma.'
+# Aviso que se muestra arriba de la lista al terminar bien (Server Password pide la clave al entrar a Multijugador)
+$avisoClave = 'Al entrar a Multijugador te pedirá una CONTRASEÑA para Los Varchar2. Elige una que recuerdes: si juegas desde otro PC, escribe la misma.'
 
 # ---------------------------------------------------------------------
 # 4) LOGICA DE LA VENTANA

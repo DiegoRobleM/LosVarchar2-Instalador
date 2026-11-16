@@ -828,16 +828,6 @@
                                                      "version":  "neoforge-1.21.1-0.33.0"
                                                  }
                                              ],
-                 "passwordgate":  [
-                                      {
-                                          "archivo":  "passwordgate-1.1.0-neoforge-1.21.1.jar",
-                                          "url":  "https://cdn.modrinth.com/data/vmjhbdLW/versions/ViiHHqiX/passwordgate-1.1.0-neoforge-1.21.1.jar",
-                                          "sha1":  "00e9051aca0c1ca6eb7a001518c3b00f826e0352",
-                                          "tam":  100549,
-                                          "proyecto":  "vmjhbdLW",
-                                          "version":  "1.1.0"
-                                      }
-                                  ],
                  "regions-unexplored":  [
                                             {
                                                 "archivo":  "regions-unexplored-0.6.3-neoforge-21.1.jar",
@@ -874,6 +864,16 @@
                                             "version":  "2.1.0.2"
                                         }
                                     ],
+                 "server-password-without-login":  [
+                                                       {
+                                                           "archivo":  "serverpassword-0.1.1-beta.jar",
+                                                           "url":  "https://cdn.modrinth.com/data/IVHI4RNq/versions/4wQfdYEG/serverpassword-0.1.1-beta.jar",
+                                                           "sha1":  "1de1211f0d73bd4ebb254f9a35c4a9e4b3516993",
+                                                           "tam":  50187,
+                                                           "proyecto":  "IVHI4RNq",
+                                                           "version":  "0.1.1-beta"
+                                                       }
+                                                   ],
                  "simple-voice-chat":  [
                                            {
                                                "archivo":  "voicechat-neoforge-1.21.1-2.6.22.jar",

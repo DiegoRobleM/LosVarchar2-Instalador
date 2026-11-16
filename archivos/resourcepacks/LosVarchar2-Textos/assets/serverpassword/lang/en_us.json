@@ -1,0 +1,26 @@
+{
+  "serverpassword.gui.button": "Contraseña",
+  "serverpassword.gui.button.tooltip": "Cambiar la contraseña que se usa para entrar a Los Varchar2",
+
+  "serverpassword.gui.entry.title": "Contraseña de Los Varchar2",
+  "serverpassword.gui.entry.explain.what": "\u00a70Para entrar a Los Varchar2 necesitas una contraseña: así nadie más puede usar tu nombre de jugador.",
+  "serverpassword.gui.entry.explain.first": "\u00a70La primera vez que entres, esta contraseña queda unida a tu nombre. Si juegas desde otro PC, escribe la misma.",
+  "serverpassword.gui.entry.explain.change": "\u00a70Solo Diego puede reiniciarla, así que elige una que recuerdes.",
+  "serverpassword.gui.entry.password": "Contraseña",
+  "serverpassword.gui.entry.reveal": "Mostrar contraseña",
+  "serverpassword.gui.entry.hide": "Ocultar contraseña",
+  "serverpassword.gui.entry.save": "Guardar",
+  "serverpassword.gui.entry.plaintext_warning": "Se guarda sin cifrar en este PC (config/serverpassword-local.json): no uses la de otra cuenta.",
+  "serverpassword.gui.entry.error.too_short": "Usa al menos %s caracteres.",
+
+  "serverpassword.disconnect.wrong_password": "Los Varchar2: contraseña incorrecta para este nombre. Si la olvidaste, pídele a Diego que la reinicie.",
+  "serverpassword.disconnect.registration_closed": "Los Varchar2: este nombre no está registrado y no se aceptan registros nuevos. Habla con Diego.",
+  "serverpassword.disconnect.password_reset": "Los Varchar2: Diego reinició tu contraseña. Elige una nueva con el botón Contraseña de Multijugador y vuelve a entrar.",
+  "serverpassword.disconnect.retry": "Los Varchar2: alguien acaba de registrar ese nombre. Vuelve a intentar.",
+  "serverpassword.disconnect.protocol_error": "Los Varchar2: falló la revisión de la contraseña. Vuelve a intentar.",
+  "serverpassword.disconnect.not_ready": "Los Varchar2: el servidor todavía no está listo para revisar contraseñas. Espera un poco.",
+  "serverpassword.disconnect.storage_broken": "Los Varchar2: el servidor no puede leer las contraseñas. Avísale a Diego.",
+  "serverpassword.disconnect.client_no_password": "Los Varchar2: no tienes contraseña. Ponla con el botón Contraseña (arriba a la derecha en Multijugador).",
+  "serverpassword.disconnect.client_no_password_new": "Los Varchar2 necesita una contraseña. Ponla con el botón Contraseña (arriba a la derecha en Multijugador); la primera vez que entres quedará registrada.",
+  "serverpassword.disconnect.client_error": "Los Varchar2: no se pudo calcular la contraseña. Vuelve a intentar."
+}

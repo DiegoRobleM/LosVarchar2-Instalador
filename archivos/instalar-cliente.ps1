@@ -146,5 +146,5 @@ if (Test-Path -LiteralPath $origenTextos) {
 Write-Host ''
 Write-Host 'Listo. Abre el launcher de Minecraft, elige el perfil "NeoForge" y juega.' -ForegroundColor Green
 Write-Host ''
-Write-Host 'IMPORTANTE: al abrir Minecraft te pedira una CONTRASENA para entrar a Los Varchar2.' -ForegroundColor Yellow
-Write-Host 'Elige una (minimo 12 caracteres) y guardala bien: si juegas desde otro PC, escribe la misma.' -ForegroundColor Yellow
+Write-Host 'IMPORTANTE: al entrar a Multijugador te pedira una CONTRASENA para Los Varchar2.' -ForegroundColor Yellow
+Write-Host 'Elige una que recuerdes: si juegas desde otro PC, escribe la misma.' -ForegroundColor Yellow
