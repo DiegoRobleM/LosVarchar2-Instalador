@@ -141,34 +141,41 @@ function Instalar-PaqueteTextos($origen, $mcDir) {
     return (Activar-PaqueteRecursos $mcDir "file/$paqueteTextos")
 }
 
-# Agrega el paquete al final de "resourcePacks:[...]" en options.txt (al final = encima de los
+# Deja el paquete AL FINAL de "resourcePacks:[...]" en options.txt (al final = encima de los
 # demas, asi sus textos ganan). Edita solo esa linea; el resto del archivo queda igual.
+# Ojo: "mod_resources" (los recursos de TODOS los mods) tiene que quedar ANTES. Si no esta en la
+# lista, Minecraft lo agrega al abrir... encima del nuestro, y el texto en ingles del mod gana
+# (paso el 16-11-2026: resourcePacks:["vanilla","file/LosVarchar2-Textos","mod_resources",...]).
+# Por eso: se asegura "mod_resources" y, si el nuestro ya estaba pero no al final, se mueve.
 function Activar-PaqueteRecursos($mcDir, $id) {
     $opciones = Join-Path $mcDir 'options.txt'
     $utf8 = New-Object Text.UTF8Encoding $false
     $entrada = '"' + $id + '"'
+    $recursosMods = '"mod_resources"'
     if (-not (Test-Path -LiteralPath $opciones)) {
         # Minecraft nunca se abrio: completa el resto de opciones al abrir. version:3955 = 1.21.1
-        [IO.File]::WriteAllLines($opciones, [string[]]@('version:3955', "resourcePacks:[`"vanilla`",$entrada]"), $utf8)
+        [IO.File]::WriteAllLines($opciones, [string[]]@('version:3955', "resourcePacks:[`"vanilla`",$recursosMods,$entrada]"), $utf8)
         return 'activado'
     }
     $lineas = [IO.File]::ReadAllLines($opciones, $utf8)
     $i = -1
     for ($n = 0; $n -lt $lineas.Count; $n++) { if ($lineas[$n].StartsWith('resourcePacks:')) { $i = $n; break } }
-    if ($i -ge 0 -and $lineas[$i].Contains($entrada)) { return 'ya-activo' }
+    if ($i -ge 0 -and $lineas[$i].EndsWith(",$entrada]") -and $lineas[$i].Contains($recursosMods)) { return 'ya-activo' }
     try {
         $abierto = @(Get-CimInstance Win32_Process -Filter "Name='javaw.exe' OR Name='java.exe'" |
                      Where-Object { $_.CommandLine -match 'minecraft' -and $_.CommandLine -notmatch 'win_args\.txt' }).Count -gt 0
     } catch { $abierto = $false }
     if ($abierto) { return 'minecraft-abierto' }
     if ($i -lt 0) {
-        $lineas = @($lineas) + "resourcePacks:[`"vanilla`",$entrada]"
+        $lineas = @($lineas) + "resourcePacks:[`"vanilla`",$recursosMods,$entrada]"
     } else {
         $valor = $lineas[$i].Substring('resourcePacks:'.Length).Trim()
-        if ($valor -match '^\[\s*\]$') { $valor = "[$entrada]" }
-        elseif ($valor.StartsWith('[') -and $valor.EndsWith(']')) { $valor = $valor.Substring(0, $valor.Length - 1) + ",$entrada]" }
-        else { return 'sin-activar' }
-        $lineas[$i] = "resourcePacks:$valor"
+        if (-not ($valor.StartsWith('[') -and $valor.EndsWith(']'))) { return 'sin-activar' }
+        # Elementos de la lista tal cual (con comillas). Los nombres de paquetes no llevan comas.
+        $items = @($valor.Substring(1, $valor.Length - 2).Split(',') | ForEach-Object { $_.Trim() } | Where-Object { $_ -and $_ -ne $entrada })
+        if ($items -notcontains $recursosMods) { $items += $recursosMods }
+        $items += $entrada
+        $lineas[$i] = 'resourcePacks:[' + ($items -join ',') + ']'
     }
     [IO.File]::WriteAllLines($opciones, [string[]]$lineas, $utf8)
     return 'activado'
