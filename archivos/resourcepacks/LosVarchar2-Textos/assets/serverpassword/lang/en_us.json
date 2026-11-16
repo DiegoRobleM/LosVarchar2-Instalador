@@ -3,9 +3,9 @@
   "serverpassword.gui.button.tooltip": "Cambiar la contraseña que se usa para entrar a Los Varchar2",
 
   "serverpassword.gui.entry.title": "Contraseña de Los Varchar2",
-  "serverpassword.gui.entry.explain.what": "\u00a70Para entrar a Los Varchar2 necesitas una contraseña: así nadie más puede usar tu nombre de jugador.",
-  "serverpassword.gui.entry.explain.first": "\u00a70La primera vez que entres, esta contraseña queda unida a tu nombre. Si juegas desde otro PC, escribe la misma.",
-  "serverpassword.gui.entry.explain.change": "\u00a70Solo Diego puede reiniciarla, así que elige una que recuerdes.",
+  "serverpassword.gui.entry.explain.what": "\u00a7fPara entrar a Los Varchar2 necesitas una contraseña: así nadie más puede usar tu nombre de jugador.",
+  "serverpassword.gui.entry.explain.first": "\u00a7fLa primera vez que entres, esta contraseña queda unida a tu nombre. Si juegas desde otro PC, escribe la misma.",
+  "serverpassword.gui.entry.explain.change": "\u00a7fSolo Diego puede reiniciarla, así que elige una que recuerdes.",
   "serverpassword.gui.entry.password": "Contraseña",
   "serverpassword.gui.entry.reveal": "Mostrar contraseña",
   "serverpassword.gui.entry.hide": "Ocultar contraseña",
