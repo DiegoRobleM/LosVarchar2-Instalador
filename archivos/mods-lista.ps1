@@ -124,6 +124,56 @@ function Fijar-PerfilNeoForge($mcDir, $nf) {
     return $borradas
 }
 
+# --- Paquete de recursos "LosVarchar2-Textos" (archivos\resourcepacks) ---
+# Cambia los textos en ingles de PasswordGate por textos en espanol que explican que la
+# contrasena es para Los Varchar2. Reemplaza el en_us del mod: asi se ve en cualquier idioma
+# (es_cl, es_es, en_us...), porque Minecraft usa en_us para lo que su idioma no traduce.
+# Se copia entero (siempre, es nuestro) y se activa en options.txt.
+# Devuelve: 'activado', 'ya-activo', 'minecraft-abierto' (copiado pero sin activar: Minecraft
+# reescribe options.txt al guardar opciones) o 'sin-activar' (options.txt con formato raro).
+$paqueteTextos = 'LosVarchar2-Textos'
+
+function Instalar-PaqueteTextos($origen, $mcDir) {
+    $destino = Join-Path $mcDir "resourcepacks\$paqueteTextos"
+    if (Test-Path -LiteralPath $destino) { Remove-Item -LiteralPath $destino -Recurse -Force }
+    New-Item -ItemType Directory -Force -Path (Split-Path $destino) | Out-Null
+    Copy-Item -LiteralPath $origen $destino -Recurse
+    return (Activar-PaqueteRecursos $mcDir "file/$paqueteTextos")
+}
+
+# Agrega el paquete al final de "resourcePacks:[...]" en options.txt (al final = encima de los
+# demas, asi sus textos ganan). Edita solo esa linea; el resto del archivo queda igual.
+function Activar-PaqueteRecursos($mcDir, $id) {
+    $opciones = Join-Path $mcDir 'options.txt'
+    $utf8 = New-Object Text.UTF8Encoding $false
+    $entrada = '"' + $id + '"'
+    if (-not (Test-Path -LiteralPath $opciones)) {
+        # Minecraft nunca se abrio: completa el resto de opciones al abrir. version:3955 = 1.21.1
+        [IO.File]::WriteAllLines($opciones, [string[]]@('version:3955', "resourcePacks:[`"vanilla`",$entrada]"), $utf8)
+        return 'activado'
+    }
+    $lineas = [IO.File]::ReadAllLines($opciones, $utf8)
+    $i = -1
+    for ($n = 0; $n -lt $lineas.Count; $n++) { if ($lineas[$n].StartsWith('resourcePacks:')) { $i = $n; break } }
+    if ($i -ge 0 -and $lineas[$i].Contains($entrada)) { return 'ya-activo' }
+    try {
+        $abierto = @(Get-CimInstance Win32_Process -Filter "Name='javaw.exe' OR Name='java.exe'" |
+                     Where-Object { $_.CommandLine -match 'minecraft' -and $_.CommandLine -notmatch 'win_args\.txt' }).Count -gt 0
+    } catch { $abierto = $false }
+    if ($abierto) { return 'minecraft-abierto' }
+    if ($i -lt 0) {
+        $lineas = @($lineas) + "resourcePacks:[`"vanilla`",$entrada]"
+    } else {
+        $valor = $lineas[$i].Substring('resourcePacks:'.Length).Trim()
+        if ($valor -match '^\[\s*\]$') { $valor = "[$entrada]" }
+        elseif ($valor.StartsWith('[') -and $valor.EndsWith(']')) { $valor = $valor.Substring(0, $valor.Length - 1) + ",$entrada]" }
+        else { return 'sin-activar' }
+        $lineas[$i] = "resourcePacks:$valor"
+    }
+    [IO.File]::WriteAllLines($opciones, [string[]]$lineas, $utf8)
+    return 'activado'
+}
+
 # --- Versiones fijas (mods-fijos.json) ---
 # mods.json dice QUE mods van; mods-fijos.json dice la VERSION EXACTA de cada uno (y de sus
 # dependencias). Asi el servidor y todos los amigos tienen los mismos archivos, y un mod solo

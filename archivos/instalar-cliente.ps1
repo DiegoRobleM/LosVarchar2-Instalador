@@ -132,5 +132,19 @@ if (Test-Path -LiteralPath $origenCfg) {
     }
 }
 
+# 5) Textos en espanol de la contrasena (archivos\resourcepacks -> .minecraft\resourcepacks)
+$origenTextos = Join-Path $PSScriptRoot "resourcepacks\$paqueteTextos"
+if (Test-Path -LiteralPath $origenTextos) {
+    switch (Instalar-PaqueteTextos $origenTextos $mcDir) {
+        'activado'          { Write-Host "  [nuevo] resourcepacks\$paqueteTextos" -ForegroundColor Green }
+        'ya-activo'         { Write-Host "  [ya esta] resourcepacks\$paqueteTextos" -ForegroundColor DarkGray }
+        'minecraft-abierto' { Write-Host '  [omitido] Textos de la contrasena: cierra Minecraft y vuelve a abrir el instalador.' -ForegroundColor Yellow }
+        default             { Write-Host "  [omitido] Activa $paqueteTextos en Opciones > Paquetes de recursos." -ForegroundColor Yellow }
+    }
+}
+
 Write-Host ''
 Write-Host 'Listo. Abre el launcher de Minecraft, elige el perfil "NeoForge" y juega.' -ForegroundColor Green
+Write-Host ''
+Write-Host 'IMPORTANTE: al abrir Minecraft te pedira una CONTRASENA para entrar a Los Varchar2.' -ForegroundColor Yellow
+Write-Host 'Elige una (minimo 12 caracteres) y guardala bien: si juegas desde otro PC, escribe la misma.' -ForegroundColor Yellow

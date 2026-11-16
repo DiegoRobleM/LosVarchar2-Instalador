@@ -262,6 +262,21 @@ $trabajo = {
             }
         }
 
+        # --- Textos en espanol de la contrasena (archivos\resourcepacks -> .minecraft\resourcepacks) ---
+        # Funcion Instalar-PaqueteTextos en mods-lista.ps1 (la usa tambien el modo texto)
+        $origenTextos = Join-Path $carpeta "resourcepacks\$paqueteTextos"
+        if (Test-Path -LiteralPath $origenTextos) {
+            $sync.Fase = 'Instalando textos en español...'
+            try {
+                switch (Instalar-PaqueteTextos $origenTextos $mcDir) {
+                    'activado'          { Log "resourcepacks\$paqueteTextos" 'nuevo' }
+                    'ya-activo'         { Log "resourcepacks\$paqueteTextos" 'ya' }
+                    'minecraft-abierto' { Log 'Textos de la contraseña: cierra Minecraft y vuelve a abrir el instalador para activarlos.' 'omitido' }
+                    default             { Log "Textos de la contraseña: actívalos en Opciones > Paquetes de recursos ($paqueteTextos)." 'omitido' }
+                }
+            } catch { Log "resourcepacks\$paqueteTextos" 'error' }
+        }
+
         # --- Carpetas de respaldo de mods (solo si el usuario dijo que si) ---
         if ($sync.BorrarRespaldo) {
             $sync.Fase = 'Borrando respaldos antiguos...'
@@ -345,6 +360,8 @@ $trabajoDemo = {
         $sync.Descargando = $false; $sync.Actual = ''; $sync.Paso = 4
         $sync.Fase = 'Copiando configuraciones...'; Esperar 700
         Log 'config\inventoryprofilesnext\inventoryprofiles.json' 'ya'
+        $sync.Fase = 'Instalando textos en español...'; Esperar 500
+        Log 'resourcepacks\LosVarchar2-Textos' 'nuevo'
         $sync.Fase = 'Terminado'
     } catch {
         if ($sync.Cancelar) { $sync.Error = 'Instalación cancelada.' } else { $sync.Error = $_.Exception.Message }
@@ -967,6 +984,7 @@ function Nuevo-Icono([string]$nombre, [string]$tipo) {
         'borrado'  { @('#C8901E', '#F5CF5A') }
         'error'    { @('#B83B3B', '#F28B82') }
         'info'     { @('#454C59', '#6B7383') }
+        'aviso'    { @('#C8901E', '#F5CF5A') }
         default {
             $suma = 0; foreach ($ch in $nombre.ToCharArray()) { $suma += [int]$ch }
             $paletaIconos[$suma % $paletaIconos.Count]
@@ -1000,6 +1018,9 @@ $etiquetas = @{
     omitido  = @('Omitido', '#F59E42', '#3A2716')
     error    = @('Error', '#F87171', '#3A1C1C')
 }
+
+# Aviso que se muestra arriba de la lista al terminar bien (PasswordGate pide la clave al abrir Minecraft)
+$avisoClave = 'Al abrir Minecraft te pedirá una CONTRASEÑA para entrar a Los Varchar2. Elige una (mínimo 12 caracteres) y guárdala bien: si juegas desde otro PC, escribe la misma.'
 
 # ---------------------------------------------------------------------
 # 4) LOGICA DE LA VENTANA
@@ -1050,7 +1071,11 @@ function Agregar-Fila($texto, $tipo, $tam) {
     $t = New-Object System.Windows.Controls.TextBlock
     $t.Text = $texto; $t.FontSize = 15; $t.VerticalAlignment = 'Center'
     if ($tipo -eq 'info') { $t.Foreground = Color '#9AA3AF'; $t.FontSize = 13.5; $t.TextWrapping = 'Wrap' }
-    else { $t.Foreground = Color '#E6E9EE'; $t.FontWeight = 'SemiBold'; $t.TextTrimming = 'CharacterEllipsis' }
+    elseif ($tipo -eq 'aviso') {
+        # Fila destacada (amarilla) para algo que el jugador tiene que saber
+        $t.Foreground = Color '#F5CF5A'; $t.FontWeight = 'SemiBold'; $t.TextWrapping = 'Wrap'
+        $fila.Background = Color '#3A3018'; $fila.Margin = New-Object System.Windows.Thickness(0, 0, 0, 6)
+    } else { $t.Foreground = Color '#E6E9EE'; $t.FontWeight = 'SemiBold'; $t.TextTrimming = 'CharacterEllipsis' }
     [System.Windows.Controls.Grid]::SetColumn($t, 1)
     [void]$g.Children.Add($t)
 
@@ -1224,6 +1249,7 @@ function Finalizar {
         $c.btnCerrar.Visibility = 'Collapsed'
         $app.Listo = $true
         $c.txtPie.Text = $resumen
+        Agregar-Fila $avisoClave 'aviso'
     }
     $c.btnCerrar.Content = 'Cerrar'; $c.btnCerrar.IsEnabled = $true
     if ($app.PS) { $app.PS.Runspace.Close(); $app.PS.Dispose(); $app.PS = $null }

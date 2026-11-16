@@ -45,6 +45,15 @@ CONECTARSE
 1. Multijugador > Agregar servidor.
 2. Pega la direccion que te pase Diego.
 
+CONTRASENA
+- Al abrir Minecraft aparece la pantalla "Contrasena de Los Varchar2".
+  Elige una contrasena (minimo 12 caracteres) y presiona Continuar.
+  Queda guardada en tu PC y el juego la usa solo al entrar al servidor.
+- La primera vez que entras, tu nombre queda unido a esa contrasena:
+  nadie mas puede entrar con tu nombre.
+- Si juegas desde otro PC, escribe LA MISMA contrasena.
+- Si la pierdes, pidele a Diego que la reinicie.
+
 SHADERS
 - Se instalan Iris y un shader pack. Para usarlo: en el juego ve a
   Opciones > Video > Shaders y elige "ComplementaryReimagined".
