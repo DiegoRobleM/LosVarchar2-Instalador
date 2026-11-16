@@ -139,6 +139,8 @@ $trabajo = {
             if ($p.ExitCode -ne 0) { throw "Falló el instalador de NeoForge (código $($p.ExitCode))." }
             Log "NeoForge $nf" 'nuevo'
         }
+        # El perfil "NeoForge" del launcher queda en esta version y se borran las otras 21.1.x
+        foreach ($b in (Fijar-PerfilNeoForge $mcDir $nf)) { Log "Versión vieja: $b" 'borrado' }
         $sync.NeoListo = $true
 
         # --- PASO 2: armar el plan: que archivo corresponde a cada mod y sus dependencias ---

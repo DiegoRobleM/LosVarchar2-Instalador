@@ -86,6 +86,8 @@ if (Test-Path (Join-Path $mcDir "versions\neoforge-$nf")) {
     Pop-Location
     if ($LASTEXITCODE -ne 0) { Write-Host 'Fallo el instalador de NeoForge.' -ForegroundColor Red; exit 1 }
 }
+# El perfil "NeoForge" del launcher queda en esta version y se borran las otras 21.1.x
+foreach ($b in (Fijar-PerfilNeoForge $mcDir $nf)) { Write-Host "Version vieja borrada: $b" -ForegroundColor DarkGray }
 
 # 2) Sincronizar mods (lista en mods-lista.ps1)
 #    Descarga solo los que faltan. Los que no estan en la lista (otros mods tuyos o

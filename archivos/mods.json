@@ -8,6 +8,7 @@
     "Despues de cambiar este archivo: Herramientas/publicar-lista.bat para que les llegue a los amigos."
   ],
   "mc": "1.21.1",
+  "neoforge": "21.1.265",
   "modsAmbos": {
     "rendimiento": [
       "modernfix",
@@ -106,6 +107,9 @@
     ],
     "misiones": [
       "daily-quests"
+    ],
+    "economia": [
+      "lightmans-currency"
     ]
   },
   "modsSoloServidor": [

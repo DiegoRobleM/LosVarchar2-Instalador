@@ -32,4 +32,4 @@ Es un script de PowerShell casero, sin firma digital. Por eso Windows puede most
 - No descarga ni ejecuta otros scripts.
 
 ---
-Este repositorio se actualiza solo desde el proyecto del servidor (`Herramientas/publicar-instalador.ps1`). No edites aquí directamente.
+Este repositorio se actualiza solo desde el proyecto del servidor (`scripts/publicar/publicar-instalador.ps1`). No edites aquí directamente.

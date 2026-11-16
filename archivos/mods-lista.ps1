@@ -77,13 +77,40 @@ function Get-Json($u) {
     return ,$out
 }
 
+# Version de NeoForge a instalar. Si mods.json trae "neoforge" (la misma del servidor), se usa
+# esa: asi los amigos no quedan con una version distinta cuando sale una nueva (paso con 21.1.266
+# mientras el servidor seguia en 21.1.265). Solo si no viene, se busca la estable mas reciente.
 function Get-NeoForgeVersion {
-    $r = Invoke-RestMethod 'https://maven.neoforged.net/api/maven/versions/releases/net/neoforged/neoforge' -Headers $headers
+    if ($datosLista.neoforge) { return [string]$datosLista.neoforge }
+    $r =Invoke-RestMethod 'https://maven.neoforged.net/api/maven/versions/releases/net/neoforged/neoforge' -Headers $headers
     $cands = @()
     foreach ($v in $r.versions) { if ($v -like '21.1.*' -and $v -notmatch 'alpha|beta') { $cands += $v } }
     $best = $cands[0]
     foreach ($c in $cands) { try { if ([version]$c -gt [version]$best) { $best = $c } } catch {} }
     return $best
+}
+
+# Deja el perfil "NeoForge" del launcher apuntando a la version $nf y borra las carpetas
+# versions\neoforge-21.1.* que ya no usa ningun perfil (las que dejo una version distinta).
+# Devuelve los nombres de las carpetas borradas. Edita el texto con una expresion regular en vez
+# de ConvertTo-Json para no cambiar el resto del archivo del launcher.
+function Fijar-PerfilNeoForge($mcDir, $nf) {
+    $borradas = @()
+    $archivoPerfiles = Join-Path $mcDir 'launcher_profiles.json'
+    if (-not (Test-Path -LiteralPath $archivoPerfiles)) { return ,$borradas }
+    $texto = [IO.File]::ReadAllText($archivoPerfiles)
+    $patron = '("NeoForge"\s*:\s*\{[^{}]*?"lastVersionId"\s*:\s*")neoforge-[^"]+(")'
+    $nuevo = [regex]::Replace($texto, $patron, ('${1}neoforge-' + $nf + '${2}'))
+    if ($nuevo -ne $texto) { [IO.File]::WriteAllText($archivoPerfiles, $nuevo, (New-Object Text.UTF8Encoding $false)) }
+
+    $usadas = @{}
+    foreach ($m in [regex]::Matches($nuevo, '"lastVersionId"\s*:\s*"([^"]+)"')) { $usadas[$m.Groups[1].Value] = $true }
+    $dirVersiones = Join-Path $mcDir 'versions'
+    foreach ($d in @(Get-ChildItem -LiteralPath $dirVersiones -Directory -Filter 'neoforge-21.1.*' -ErrorAction SilentlyContinue)) {
+        if ($d.Name -eq "neoforge-$nf" -or $usadas.ContainsKey($d.Name)) { continue }
+        try { Remove-Item -LiteralPath $d.FullName -Recurse -Force; $borradas += $d.Name } catch {}
+    }
+    return ,$borradas
 }
 
 # --- Sincronizacion de mods ---
